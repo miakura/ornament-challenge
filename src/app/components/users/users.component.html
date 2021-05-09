@@ -1,0 +1,17 @@
+<h1>Пользователи</h1>
+<app-table [records]="users$ | async" (tryDelete)="delete($event)" (tryEdit)="beginEdit($event)"></app-table>
+  <div *ngIf="showForm" class="form-container">
+    <div class="inputs">
+      <input [(ngModel)]="user.name" [required]="true" type="text">
+      <input [(ngModel)]="user.password" [required]="true" type="password">
+      <input [(ngModel)]="user.email" [required]="true" type="text">
+      <input [(ngModel)]="user.phone" [required]="true" type="text">
+      <input [(ngModel)]="user.address" [required]="true" type="text">
+    </div>
+    <div class="buttons">
+      <button (click)="cancel()">Отмена</button>
+      <button *ngIf="!showEditButton" (click)="addNewUser()">Добавить</button>
+      <button *ngIf="showEditButton" (click)="acceptEdit()">Изменить</button>
+    </div>
+  </div>
+<button (click)="showFormSwitcher(false)">Добавить новую запись</button>

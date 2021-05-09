@@ -1,0 +1,18 @@
+<table class="table">
+  <thead>
+  <tr>
+    <th *ngFor="let key of keys">{{ key }}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let record of records">
+    <td *ngFor="let key of keys">{{ record[key] }}</td>
+    <td class="support-block" (click)="edit(record.id)">
+      &#9998;
+    </td>
+    <td class="support-block" (click)="delete(record.id)">
+      &#215;
+    </td>
+  </tr>
+  </tbody>
+</table>

@@ -6,7 +6,14 @@
   </thead>
   <tbody>
   <tr *ngFor="let record of records">
-    <td *ngFor="let key of keys">{{ record[key] }}</td>
+    <td *ngFor="let key of keys">
+      <ng-template [ngIf]="(key === 'createdAt') || (key === 'updatedAt')" [ngIfElse]="dateBeautifier">
+        {{record[key] | date: 'dd.MM.yyyy HH:mm:ss'}}
+      </ng-template>
+      <ng-template #dateBeautifier>
+        {{record[key]}}
+      </ng-template>
+    </td>
     <td class="support-block" (click)="edit(record.id)">
       &#9998;
     </td>

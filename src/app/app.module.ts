@@ -43,7 +43,6 @@ const dbConfig: DBConfig = {
       store: 'order',
       storeConfig: { keyPath: 'id', autoIncrement: true },
       storeSchema: [
-        { name: 'name', keypath: 'name', options: { unique: false } },
         { name: 'userId', keypath: 'name', options: { unique: false } },
         { name: 'productId', keypath: 'name', options: { unique: false } },
         { name: 'discount', keypath: 'name', options: { unique: false } },

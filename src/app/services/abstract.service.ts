@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export abstract class AbstractService<T> {
-  constructor(public db: NgxIndexedDBService) {}
+  constructor(private db: NgxIndexedDBService) {}
 
   get(storeName: string, id: number): Observable<T> {
     return this.db.getByID(storeName, id);
@@ -20,7 +20,7 @@ export abstract class AbstractService<T> {
     return this.db.addItem(storeName, value);
   }
 
-  update(storeName: string, value: T, key?: number): Observable<T[]> {
+  update(storeName: string, value: T): Observable<T[]> {
     return this.db.update(storeName, value);
   }
 

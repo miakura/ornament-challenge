@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user';
 import { Observable } from 'rxjs';
 import { UserRepositoryService } from '../../services/user-repository.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-users',
@@ -14,15 +15,17 @@ export class UsersComponent implements OnInit {
   showForm: boolean;
   user: User;
   showEditButton: boolean;
-  currentDate: Date;
+  form: FormGroup;
+  private editingId: string;
 
-  constructor(private db: UserRepositoryService) {}
+  constructor(private db: UserRepositoryService) {
+    this.initForm();
+  }
 
   ngOnInit(): void {
     this.users$ = this.db.getAll(this.storeName);
     this.clearUserForm();
     this.showEditButton = false;
-    this.currentDate = new Date();
   }
 
   reloadData(): void {
@@ -35,9 +38,11 @@ export class UsersComponent implements OnInit {
   }
 
   addNewUser(): void {
-    this.user.createdAt = new Date();
-    this.user.updatedAt = new Date();
-    this.db.addNew(this.storeName, this.user);
+    this.form.removeControl('id');
+    this.form.controls.createdAt.setValue(new Date());
+    this.form.controls.updatedAt.setValue(new Date());
+    console.log(this.form);
+    this.db.addNew(this.storeName, this.form.value);
     this.reloadData();
     this.clearUserForm();
   }
@@ -48,7 +53,7 @@ export class UsersComponent implements OnInit {
   }
 
   private clearUserForm(): void {
-    this.user = { address: '', email: '', name: '', password: '', phone: '' };
+    this.form.reset();
   }
 
   delete($event: string): void {
@@ -56,15 +61,29 @@ export class UsersComponent implements OnInit {
   }
 
   beginEdit($event: string): void {
+    this.editingId = $event;
     this.db.get(this.storeName, Number($event)).subscribe((user) => {
-      this.user = user;
+      this.initForm(user);
     });
     this.showFormSwitcher(true);
   }
 
   acceptEdit(): void {
-    this.user.updatedAt = new Date();
-    this.users$ = this.db.update(this.storeName, this.user);
+    this.form.controls.updatedAt.setValue(new Date());
+    this.form.addControl('id', new FormControl(this.editingId));
+    this.users$ = this.db.update(this.storeName, this.form.value);
     this.showFormSwitcher(false);
+  }
+
+  private initForm(user?): void {
+    this.form = new FormGroup({
+      name: new FormControl(`${user?.name}`, Validators.required),
+      password: new FormControl(`${user?.password}`, Validators.required),
+      phone: new FormControl(`${user?.phone}`, Validators.required),
+      email: new FormControl(`${user?.email}`, Validators.required),
+      address: new FormControl(`${user?.address}`, Validators.required),
+      createdAt: new FormControl(`${user?.createdAt}`),
+      updatedAt: new FormControl(''),
+    });
   }
 }

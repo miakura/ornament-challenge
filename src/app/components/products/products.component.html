@@ -1,0 +1,18 @@
+<h1>Продукты</h1>
+<app-table [records]="products$ | async" (tryDelete)="delete($event)" (tryEdit)="beginEdit($event)"></app-table>
+<form *ngIf="showForm" [formGroup]="form">
+  <div class="input">
+    <label for="name">Имя</label>
+    <input id="name" formControlName="name" type="text">
+  </div>
+  <div class="input">
+    <label for="price">Цена</label>
+    <input id="price" formControlName="price" type="text">
+  </div>
+  <div class="buttons">
+    <button (click)="cancel()">Отмена</button>
+    <button *ngIf="!showEditButton" [disabled]="!form.valid" (click)="addNewProduct()" type="submit" name="add-button" value="add">Добавить</button>
+    <button *ngIf="showEditButton" [disabled]="!form.valid" (click)="acceptEdit()" type="submit" name="update-button" value="update">Изменить</button>
+  </div>
+</form>
+<button (click)="showFormSwitcher(false)">Добавить новый продукт</button>

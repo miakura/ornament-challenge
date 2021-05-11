@@ -1,0 +1,26 @@
+<h1>Заказы</h1>
+<app-table [records]="orders$ | async" (tryDelete)="delete($event)" (tryEdit)="beginEdit($event)"></app-table>
+<form *ngIf="showForm" [formGroup]="form">
+  <div class="input">
+    <label for="product">Продукт</label>
+    <select name="product" id="product" formControlName="productId">
+      <option *ngFor="let product of products$ | async" [value]="product.id">{{product.name}}</option>
+    </select>
+  </div>
+  <div class="input">
+    <label for="user">Пользователь</label>
+    <select name="user" id="user" formControlName="userId">
+      <option *ngFor="let user of users$ | async" [value]="user.id" >{{user.name}}</option>
+    </select>
+  </div>
+  <div class="input">
+    <label for="discount">Скидка</label>
+    <input id="discount" formControlName="discount" type="text">
+  </div>
+  <div class="buttons">
+    <button (click)="cancel()">Отмена</button>
+    <button *ngIf="!showEditButton" (click)="addNewOrder()" type="submit" name="add-button" value="add">Добавить</button>
+    <button *ngIf="showEditButton" (click)="acceptEdit()" type="submit" name="update-button" value="update">Изменить</button>
+  </div>
+</form>
+<button (click)="showFormSwitcher(false)">Добавить новый заказ</button>
